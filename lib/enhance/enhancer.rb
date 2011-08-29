@@ -38,7 +38,7 @@ class Enhance::Enhancer
   # Finds the image and resizes it if needs be
   def convert path, filename, geometry
     # Extract the width and height
-    if sizes = geometry.match(/^(?<width>\d+)?x?(?<height>\d+)([\>\<\@\%^!])?$/)
+    if sizes = geometry.match(/^(?<width>\d+)?x?(?<height>\d+)?([\>\<\@\%^!])?$/)
       w, h = sizes['width'], sizes['height']
       ow, oh = original_size path
       
