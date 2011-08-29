@@ -11,12 +11,12 @@ class Enhance::Enhancer
     @command_path += "/" unless @command_path.blank?
     @cache = options[:cache] || File.join(root, "tmp")
     @max_side = options[:max_side] || 1024
-    @server = Rack::File.new("/")
+    @file_root = (options[:file_root] || root).to_s
+    @server = Rack::File.new(@file_root)
   end
   
   def call env
     matches = env['PATH_INFO'].match /(?<filename>(#{@routes.join("|")}).*(#{@extensions.join("|")}))\/(?<geometry>.*)/i
-    p matches
     if matches && !matches['filename'].include?("..")
       dup._call env, matches
     else
@@ -27,7 +27,8 @@ class Enhance::Enhancer
   def _call env, matches
     request = @folders.collect_first{|f| File.join(f, matches['filename']) if File.exists?(File.join(f, matches['filename']))}
     
-    if request && filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))
+    if request && filename = convert(request, matches['filename'], CGI.unescape(matches['geometry'])).gsub(@file_root, '')
+      env["PATH_INFO"] = filename
       @server.call env
     else
       @app.call env
