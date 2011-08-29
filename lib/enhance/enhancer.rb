@@ -27,7 +27,7 @@ class Enhance::Enhancer
   def _call env, matches
     request = @folders.collect_first{|f| File.join(f, matches['filename']) if File.exists?(File.join(f, matches['filename']))}
     
-    if request && filename = convert(request, matches['filename'], CGI.unescape(matches['geometry'])).gsub(@file_root, '')
+    if request && (filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))) && filename.gsub!(@file_root, '')
       env["PATH_INFO"] = filename
       @server.call env
     else
