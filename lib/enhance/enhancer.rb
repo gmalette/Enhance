@@ -25,7 +25,7 @@ class Enhance::Enhancer
   end
   
   def _call env, matches
-    request = @folders.collect_first{|f| File.join(f, matches['filename']) if File.exists?(File.join(f, matches['filename']))}
+    request = @folders.collect_first{|f| if f = File.exists?(File.join(f, matches['filename'])); f; end}
     
     if request && (filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))) && filename.gsub!(@file_root, '')
       env["PATH_INFO"] = filename
@@ -58,7 +58,9 @@ class Enhance::Enhancer
   def resize source, destination, geometry  
     FileUtils.mkdir_p File.dirname(destination)
     
-    `#{@command_path}convert \"#{source}\" -resize \"#{geometry}\" -quality #{@quality} \"#{destination}\"` unless File.exists? destination
+    unless File.exists?(destination) && File.mtime(destination) > File.mtime(source)
+      `#{@command_path}convert \"#{source}\" -resize \"#{geometry}\" -quality #{@quality} \"#{destination}\"`
+    end
     
     destination
   end
