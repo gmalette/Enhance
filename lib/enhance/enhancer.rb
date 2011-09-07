@@ -1,6 +1,8 @@
 
 class Enhance::Enhancer
   
+  Geometry =  /^(?<geometry>(?<width>\d+)?x?(?<height>\d+)?([\>\<\@\%^!])?)(?<filter>sample)?$/
+  
   def initialize app, root, options = {}
     @app = app
     @extensions = options[:extensions] || %w( jpg png jpeg gif )
@@ -41,7 +43,7 @@ class Enhance::Enhancer
   # Finds the image and resizes it if needs be
   def convert path, filename, geometry
     # Extract the width and height
-    if sizes = geometry.match(/^(?<width>\d+)?x?(?<height>\d+)?([\>\<\@\%^!])?$/)
+    if sizes = geometry.match(Geometry)
       w, h = sizes['width'], sizes['height']
       ow, oh = original_size path
       
@@ -61,8 +63,14 @@ class Enhance::Enhancer
   def resize source, destination, geometry  
     FileUtils.mkdir_p File.dirname(destination)
     
+    match = geometry.match Geometry
+    
+    method = match['filter'] || 'resize'
+    
     unless File.exists?(destination) && File.mtime(destination) > File.mtime(source)
-      `#{@command_path}convert \"#{source}\" -resize \"#{geometry}\" -quality #{@quality} \"#{destination}\"`
+      command = "#{@command_path}convert \"#{source}\" -#{method} \"#{match['geometry']}\" -quality #{@quality} \"#{destination}\""
+      puts command
+      `#{command}`
     end
     
     destination
