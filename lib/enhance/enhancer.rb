@@ -3,7 +3,7 @@ class Enhance::Enhancer
   
   def initialize app, root, options = {}
     @app = app
-    @extensions = options[:extensions] || %w( jpg png )
+    @extensions = options[:extensions] || %w( jpg png jpeg gif )
     @routes = options[:routes] || %w( images )
     @folders = options[:folders] || [File.join(root, "public")]
     @quality = options[:quality] || 100
