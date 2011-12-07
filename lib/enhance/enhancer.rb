@@ -3,6 +3,15 @@ class Enhance::Enhancer
   
   Geometry =  /^(?<geometry>(?<width>\d+)?x?(?<height>\d+)?([\>\<\@\%^!])?)(?<filter>sample)?$/
   
+  ## Options
+  # extensions : list of supported extensions
+  # routes : list of matched routes
+  # folders : list of folders to look in
+  # quality : quality of output images
+  # command_path : path for imagemagick if not in PATH
+  # cache : folder in which to cache enhanced images
+  # max_side : maximum size of the enhanced image
+  # file_root : root of the server if not the same as root
   def initialize app, root, options = {}
     @app = app
     @extensions = [options[:extensions]].flatten || %w( jpg png jpeg gif )
