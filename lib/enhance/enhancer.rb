@@ -5,13 +5,13 @@ class Enhance::Enhancer
   
   def initialize app, root, options = {}
     @app = app
-    @extensions = options[:extensions] || %w( jpg png jpeg gif )
+    @extensions = [options[:extensions]].flatten || %w( jpg png jpeg gif )
     @routes = options[:routes] || %w( images )
-    @folders = options[:folders] || [File.join(root, "public")]
+    @folders = [options[:folders]].flatten || [File.join(root, "public")]
     @quality = options[:quality] || 100
     @command_path = options[:convert_path] || "#{Paperclip.options[:command_path] if defined?(Paperclip)}"
-    @command_path += "/" unless @command_path.blank?
-    @cache = options[:cache] || File.join(root, "tmp")
+    @command_path += "/" unless @command_path.empty?
+    @cache = options[:cache] || File.join(root, "tmp", "enhanced")
     @max_side = options[:max_side] || 1024
     @file_root = (options[:file_root] || root).to_s
     @server = Rack::File.new(@file_root)
