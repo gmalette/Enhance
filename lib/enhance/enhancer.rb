@@ -1,4 +1,4 @@
-
+require 'cgi'
 class Enhance::Enhancer
   
   Geometry =  /^(?<geometry>(?<width>\d+)?x?(?<height>\d+)?([\>\<\@\%^!])?)(?<filter>sample)?$/
