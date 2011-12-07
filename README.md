@@ -3,6 +3,8 @@ Enhance!
 
 > "Enhance!" - Horatio Caine, CSI
 
+[Watch this, it's awesome](http://www.youtube.com/watch?v=Vxq9yj2pVWk)
+
 Enhance! is a Rack middleware that resizes your images on-the-fly using ImageMagick.
 
 
@@ -35,3 +37,8 @@ Options
 * max_side: maximum size of the enhanced image | 1024
 * file_root: root of the server if not the same as root | root
 
+
+Future changes
+--------------
+
+* I'll probably redo the config to use a block instead of a hash.
