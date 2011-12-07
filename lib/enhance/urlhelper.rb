@@ -4,4 +4,4 @@ module ActionView::Helpers::UrlHelper
     [[matches['url'], geometry].compact.join("/"), matches['get']].compact.reject(&:empty?).join("?")
   end
   alias_method :enhance!, :enhance
-end
+end if defined? ActionView
