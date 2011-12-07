@@ -41,7 +41,8 @@ class Enhance::Enhancer
       File.exists?(f) ? f : nil
     end
     
-    if request && (filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))) && filename.gsub!(@file_root, '')
+    
+    if request && (filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))) && filename.gsub!(/^#{@file_root}/, '')
       env["PATH_INFO"] = filename
       @server.call env
     else
