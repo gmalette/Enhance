@@ -7,9 +7,14 @@ Enhance!
 
 Enhance! is a Rack middleware that resizes your images on-the-fly using ImageMagick.
 
+    gem install enhance
 
 Rails
 -----
+
+In your Gemfile
+
+    gem 'enhance', '~> 0.0.8'
 
 In your application.rb file
 
