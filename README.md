@@ -15,6 +15,26 @@ In your application.rb file
 
     config.middleware.use "Enhance::Enhancer", Rails.root, :routes => [:attachments, :images]
     
+In your views:
+
+    image_tag enhance!("/images/toto.jpg", "200x200")
+
+Usage
+-----
+
+Enhance! will match URIs based on the config parameters. To the normal image URI, you will need to add the format. The format looks like ImageMagick's parameters.
+
+Here are a few examples:
+
+* 200 or 200x, x200 or 200x200: resizes the image up to 200 pixels wide or high, keeping proportions and never upscaling the image
+* adding "<", ex: 200<: allows upscaling the image
+* 200x200!: disables proportions and resizes the image
+* adding "sample", ex: 200x200sample: resizes the image using nearest-neighbor filter
+
+Example of matched URI:
+
+    http://my_application.com/images/toto.jpg/200x200sample
+
 
 Config Options
 --------------
