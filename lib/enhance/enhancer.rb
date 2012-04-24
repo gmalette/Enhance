@@ -16,7 +16,8 @@ class Enhance::Enhancer
     @app = app
     @extensions = [options[:extensions]].flatten || %w( jpg png jpeg gif )
     @routes = options[:routes] || %w( images )
-    @folders = [options[:folders]].flatten || [File.join(root, "public")]
+    @folders = [options[:folders]].flatten.compact
+    @folders = [File.join(root, "public")] if @folders.blank?
     @quality = options[:quality] || 100
     @command_path = options[:convert_path] || "#{Paperclip.options[:command_path] if defined?(Paperclip)}"
     @command_path += "/" unless @command_path.empty?
