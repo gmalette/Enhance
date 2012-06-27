@@ -13,11 +13,12 @@ class Enhance::Enhancer
   # max_side : maximum size of the enhanced image
   # file_root : root of the server if not the same as root
   def initialize app, root, options = {}
+    root = root.call if root.respond_to? :call
     @app = app
-    @extensions = [options[:extensions]].flatten || %w( jpg png jpeg gif )
+    @extensions = [options[:extensions] || %w( jpg png jpeg gif )].flatten
     @routes = options[:routes] || %w( images )
-    @folders = [options[:folders]].flatten.compact
-    @folders = [File.join(root, "public")] if @folders.blank?
+    folders = options[:folders].respond_to?(:call) ? options[:folders].call : options[:folders]
+    @folders = [folders || File.join(root, "public")].flatten.compact
     @quality = options[:quality] || 100
     @command_path = options[:convert_path] || "#{Paperclip.options[:command_path] if defined?(Paperclip)}"
     @command_path += "/" unless @command_path.empty?
@@ -41,7 +42,6 @@ class Enhance::Enhancer
       f = File.join(f, matches['filename'])
       File.exists?(f) ? f : nil
     end
-    
     
     if request && (filename = convert(request, matches['filename'], CGI.unescape(matches['geometry']))) && filename.gsub!(/^#{@file_root}/, '')
       env["PATH_INFO"] = filename
