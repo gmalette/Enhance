@@ -15,10 +15,8 @@ class EnhanceTest < Test::Unit::TestCase
   include Rack::Test::Methods
   
   def app
-    Enhance::Enhancer.new( FourOhFourApp.new, File.dirname(__FILE__), 
-      :cache => File.join(File.dirname(__FILE__), "tmp"),
-      :folders => File.dirname(__FILE__)
-    )
+    Enhance::Enhancer.new FourOhFourApp.new do |config|
+    end
   end
   
   def test_404
@@ -53,7 +51,7 @@ class EnhanceTest < Test::Unit::TestCase
   
   def test_image_oversize
     get "/images/test.jpg/2000"
-    assert_size 2000, nil, :<
+    assert last_response.not_found?
   end
   
   def assert_size width, height, comparator = :==
@@ -62,7 +60,6 @@ class EnhanceTest < Test::Unit::TestCase
       f.write last_response.body
     end
     identify = `identify #{dump}`.match /\s(?<width>[0-9]+)x(?<height>[0-9]+)/
-    
     assert identify[:width].to_i.send(comparator, width) if width
     assert identify[:height].to_i.send(comparator, height) if height
   end

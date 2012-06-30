@@ -21,7 +21,7 @@ class Enhance::Enhancer
     folder = @config.routes[matches[:folder]] || Dir.pwd
     
     request   = File.join(folder, matches['filename'])
-    destname  = File.join(*[matches['folder'], matches['filename']].select(&:present?).compact)
+    destname  = File.join(*[matches['folder'], matches['filename']].reject{|s| s.nil? || s.empty?}.compact)
     
     if request && File.exists?(request) && (filename = convert(request, destname, CGI.unescape(matches['geometry'])))
       filename.gsub!(@config.cache, '')

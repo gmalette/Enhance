@@ -17,8 +17,8 @@ class Enhance::Config
   end
   
   def cache=(path)
+    FileUtils.mkdir_p(path)
     path = File.realpath(path)
-    raise Exception.new("File not found #{path}") unless File.exist?(path)
     @cache = path
     @server = Rack::File.new(@cache)
   end
