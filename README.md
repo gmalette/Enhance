@@ -14,11 +14,15 @@ Rails
 
 In your Gemfile
 
-    gem 'enhance', '~> 0.0.8'
+    gem 'enhance', '~> 0.1.0'
 
 In your application.rb file
 
-    config.middleware.use "Enhance::Enhancer", Rails.root, :routes => [:attachments, :images]
+    config.middleware.use "Enhance::Enhancer" do |config|
+      config.match "images", "app/assets/images"
+      config.match "attachments", "app/public/attachments"
+      config.quality = 80
+    end
     
 In your views:
 
@@ -44,26 +48,18 @@ Example of matched URI:
 Config Options
 --------------
 
-    Enhance::Enhancer.new next_in_chain, root, options
+    Enhance::Enhancer.new next_in_chain do |config|
+      # ...
+    end
     
 * next_in_chain: Next Rack Application to use
-* root: Where the paths are constructed from
-* options: described next
 
-Options
+Config methods
 -------
 
-* extensions: list of supported extensions | [jpg, png, jpeg, gif]
-* routes: list of matched routes | images
-* quality: quality of output images | 100
-* folders: list of folders to look in | ["public"]
-* command_path: path for imagemagick if not in PATH | Paperclip config if available
-* cache: folder in which to cache enhanced images | "#{root}/tmp/enhanced"
-* max_side: maximum size of the enhanced image | 1024
-* file_root: root of the server if not the same as root | root
-
-
-Future changes
---------------
-
-* I'll probably redo the config to use a block instead of a hash.
+* match(route, path): Match the route and look in path for the images | "", "./"
+* extensions=: list of supported extensions | [jpg, png, jpeg, gif]
+* quality=: quality of output images | 100
+* command_path=: path for imagemagick if not in PATH | Paperclip config if available
+* cache=: folder in which to cache enhanced images | "./tmp/enhanced"
+* max_side=: maximum size of the enhanced image | 1024
